@@ -29,3 +29,30 @@ body {
     padding: 1rem;
     border-radius: 5px;
 }
+
+.plus, .x {
+    float: right;
+    color: grey;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-size: 1rem;
+    margin-left: .5rem;
+    border: 2px solid gray;
+    background-color: inherit;
+}
+
+.tile .x {
+    color: white;
+    border: 2px solid white;
+}
+
+.plus {
+    font-size: 1.25rem;
+}
+
+button:focus {
+    outline: 0;
+    border: 0;
+}
+
