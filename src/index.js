@@ -1,14 +1,14 @@
-const allProjects = [];
+let allProjects = [];
 
 const main = document.querySelector('#main');
 const plusProject = document.querySelector('#addproject');
 const plusButtons = document.querySelectorAll('.plus');
 const xButtons = document.querySelectorAll('.x');
 
-const addCard = function (name) {
+const addCard = function (name, index) {
     let newCard = document.createElement('div');
     newCard.classList.add('card');
-    newCard.id = 'card' + (allProjects.length -1);
+    newCard.id = 'card' + index;
     let cardText = document.createTextNode(name);
     newCard.append(cardText);
     main.append(newCard);
@@ -16,7 +16,7 @@ const addCard = function (name) {
     newCard.append(plusButton());
 }
 
-const addTile = function (item, context) {
+const addTile = function (item, context, index) {
     let newTile = document.createElement('div');
     newTile.classList.add('tile');
     let tileNum = allProjects[context]['todos'].length - 1;
@@ -47,6 +47,7 @@ const xButton = function (){
             parentArray = allProjects[divToGo.parentElement.id.substring(4)];
             parentArray['todos'][divToGoIndex] = null;
         }
+        window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
         divToGo.parentElement.removeChild(divToGo);
     })
     return cardButton;
@@ -60,7 +61,9 @@ const plusButton = function (){
     cardButton.append(plus);
     cardButton.addEventListener('click', function (){
         let parentId = event.target.parentElement.id;
+        console.log(parentId);
         let parentProject = allProjects[parentId.substring(4)];
+        console.log(parentProject);
         parentProject.addItem(prompt('item name:'));
         
     })
@@ -72,6 +75,7 @@ class Items {
         this.name = name;
         this.date = date;
         this.priority = priority;
+        
     }
 }
 
@@ -83,32 +87,47 @@ class Projects {
     }
 
     addItem (itemName) {
+        console.log('adding');
         let myItem = new Items(itemName, '3/5', 2);
         this.todos.push(myItem);
-        addTile (itemName, this.projectNum);
+        window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
+        addTile (itemName, this.projectNum, (this.todos.length-1));
         return this.todos;
-    }
-    removeItem(index) {
-        this.todos[index] = null;
     }
 }
 
 const createProject = function (name){
     newProject = new Projects(name);
     allProjects.push(newProject);
-    addCard(newProject.name);
+    window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
+    addCard(newProject.name, (allProjects.length-1));
 }
 
 plusProject.addEventListener('click', ()=> {
-    createProject(prompt('project name:'));
+    createProject(prompt('project name:'), allProjects.length);
 })
 
 
+console.log(window.localStorage.getItem('savedProjects'));
 
+savedProjects = JSON.parse(window.localStorage.getItem('savedProjects'));
+window.localStorage.clear();
 
+if (savedProjects) {
+    allProjects = savedProjects;
+}
 
+for (let i = 0; i < allProjects.length; i++){
+    if (allProjects[i]) {
+        addCard(allProjects[i]['name'], i);
+        for (let j = 0; j < allProjects[i]['todos'].length; j++) {
+            if (allProjects[i]['todos'][j]) {
+            addTile(allProjects[i]['todos'][j]['name'], j);
+        }
+    }
+}
 
-
+}
 
 
 
