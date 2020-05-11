@@ -1,15 +1,18 @@
 const allProjects = [];
 
 const main = document.querySelector('#main');
-const plusCard = document.querySelector('#addproject');
+const plusProject = document.querySelector('#addproject');
+const plusButtons = document.querySelectorAll('.plus');
+const xButtons = document.querySelectorAll('.x');
+
 
 
 const addCard = function (name) {
     let newCard = document.createElement('div');
     newCard.classList.add('card');
-    newCard.id = name + "_card";
+    newCard.id = 'card' + (allProjects.length -1);
+    console.log(newCard.id);
     let cardText = document.createTextNode(name);
-    //cardText.classList.add('card_text');
     newCard.append(cardText);
     main.append(newCard);
     newCard.append(xButton());
@@ -17,47 +20,47 @@ const addCard = function (name) {
 }
 
 const addTile = function (item, context) {
+    console.log(item + " " + context);
     let newTile = document.createElement('div');
     newTile.classList.add('tile');
-    let tileText = document.createTextNode(item.name);
+    newTile.id = `card${context}_${((allProjects[context]['todos']).length - 1)}`;
+    console.log(newTile.id);
+    let tileText = document.createTextNode(item);
     newTile.append(tileText);
-    let thisCard = document.querySelector('#' + context + "_card");
+    newTile.append(xButton());
+    let thisCard = document.querySelector('#card' + context);
     thisCard.append(newTile);
 }
 
-const plusButton = function (){
-    cardButton = document.createElement('button');
-    cardButton.classList.add('plus');
-    plus = document.createTextNode('+');
-    cardButton.append(plus);
-    return cardButton;
-}
+
 
 const xButton = function (){
     cardButton = document.createElement('button');
     cardButton.classList.add('x');
     x = document.createTextNode('x');
     cardButton.append(x);
+    cardButton.addEventListener('click', ()=>{
+        
+    })
     return cardButton;
 }
 
 
-
-class Projects {
-    
-    constructor (name) {
-        this.name = name;
-        this.todos = [];
-    }
-    
-    addItem (item) {
-        console.log('adding item');
-        addTile (item, this.name)
-        return this.todos.push(item);
-    }
-
+const plusButton = function (){
+    cardButton = document.createElement('button');
+    cardButton.classList.add('plus');
+    plus = document.createTextNode('+');
+    cardButton.append(plus);
+    cardButton.addEventListener('click', function (){
+        let parentId = event.target.parentElement.id;
+        let parentProject = allProjects[parentId.substring(4)];
+        console.log(parentProject);
+        console.log(parentProject['todos'].length);
+        parentProject.addItem(prompt('item name:'));
+        
+    })
+    return cardButton;
 }
-
 
 class Items {
     constructor (name, date, priority) {
@@ -68,44 +71,46 @@ class Items {
 }
 
 
-plusCard.addEventListener('click', ()=> {
-    addCard(prompt('project name:'));
-})
-
-
-const createProject = function (name){
-    tempName = new Projects(name);
-    name = tempName;
-    console.log(name);
-    allProjects.push(name);
-    addCard(name.name);
-    return {name}
+class Projects {
     
+    constructor (name) {
+        this.name = name;
+        this.todos = [];
+        this.projectNum = allProjects.length;
+    }
+
+    addItem (itemName) {
+        let myItem = new Items(itemName, '3/5', 2);
+        console.log(myItem.name);
+        this.todos.push(myItem);
+        addTile (itemName, this.projectNum);
+        return this.todos;
+    }
+
+
+
 }
 
 
-createProject('testProject');
-console.log(allProjects[0].name);
-console.log(testProject);
-myItem = new Items('testitem', '3/5', 1);
-console.log(myItem.name);
-console.log(testProject.name);
-testProject.addItem(myItem);  
+
+const createProject = function (name){
+    newProject = new Projects(name);
+    allProjects.push(newProject);
+    addCard(newProject.name);
+}
+
+plusProject.addEventListener('click', ()=> {
+    createProject(prompt('project name:'));
+})
 
 
 
-const plusButtons = document.querySelectorAll('.plus');
-const xButtons = document.querySelectorAll('.x');
 
-//for (let i = 0; i < plusButtons.length; i++) {
-  //  plusButtons[i].addEventListener('click', function (){
-   //    parent = event.target.parentElement.id;
-    //   console.log(parent);
-     //  newItem = new Items('testitem', '3/5', 1);
-     //  testProject.addItem(newItem);   
 
-   // });
-// }
+
+
+
+
 
 
 
