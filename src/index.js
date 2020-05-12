@@ -16,11 +16,15 @@ const addCard = function (name, index) {
     newCard.append(plusButton());
 }
 
-const addTile = function (item, context, index) {
+const addTile = function (item, context, index, priority) {
     let newTile = document.createElement('div');
     newTile.classList.add('tile');
     let tileNum = allProjects[context]['todos'].length - 1;
     newTile.id = `tile${tileNum}`;
+    console.log('adding tile, priority ' + priority);
+    if (priority == 1) {newTile.style.opacity = '60%';}
+    else if (priority == 2) {newTile.style.opacity = '80%';}
+    else {newTile.style.opacity = '100%';}
     let tileText = document.createTextNode(item);
     newTile.append(tileText);
     newTile.append(xButton());
@@ -37,11 +41,8 @@ const xButton = function (){
     cardButton.append(x);
     cardButton.addEventListener('click', ()=>{
         let divToGo = event.target.parentElement;
-        console.log(divToGo);
         let divToGoId = event.target.parentElement.id;
-        console.log(divToGoId);
         let divToGoIndex = event.target.parentElement.id.substring(4);
-        console.log(divToGoIndex);
         let parentArray;
         if (divToGoId.slice(0,1) == "c") {
             allProjects[divToGoIndex] = null;
@@ -63,9 +64,7 @@ const plusButton = function (){
     cardButton.append(plus);
     cardButton.addEventListener('click', function (){
         let parentId = event.target.parentElement.id;
-        console.log(parentId);
         let parentProject = allProjects[parentId.substring(4)];
-        console.log(parentProject);
         parentProject.addItem(prompt('item name:'));
         
     })
@@ -79,14 +78,12 @@ const priorityUp = function (){
     upButton.append(up);
     upButton.addEventListener('click', function (){
         let itemIndex = event.target.parentElement.id.substring(4);
-        console.log('itemindex ' + itemIndex);
         let parentId = event.target.parentElement.parentElement.id;
-        console.log('parentId ' + parentId); 
         let parentProject = allProjects[parentId.substring(4)];
-        console.log('parentPoject ' + parentProject);
         let priority = parentProject['todos'][itemIndex]['priority'];   
         priority < 3? priority++ : priority = 3;
         parentProject['todos'][itemIndex]['priority'] = priority;
+        window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
         priority == 2? event.target.parentElement.style.opacity = '80%' : event.target.parentElement.style.opacity = '100%';
     })
     return upButton;
@@ -99,14 +96,13 @@ const priorityDown = function (){
     downButton.append(down);
     downButton.addEventListener('click', function (){
         let itemIndex = event.target.parentElement.id.substring(4);
-        console.log('itemindex ' + itemIndex);
         let parentId = event.target.parentElement.parentElement.id;
-        console.log('parentId ' + parentId); 
         let parentProject = allProjects[parentId.substring(4)];
-        console.log('parentPoject ' + parentProject);
         let priority = parentProject['todos'][itemIndex]['priority'];   
         priority > 1? priority-- : priority = 1;
         parentProject['todos'][itemIndex]['priority'] = priority;
+        //console.log(parentProject + "item " + item + " priority set to " + priority);
+        window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
         priority == 2? event.target.parentElement.style.opacity = '80%' : event.target.parentElement.style.opacity = '60%';
     })
     return downButton;
@@ -114,9 +110,8 @@ const priorityDown = function (){
 
 
 class Items {
-    constructor (name, date, priority) {
+    constructor (name, priority = 2) {
         this.name = name;
-        this.date = date;
         this.priority = priority;
         
     }
@@ -129,12 +124,12 @@ class Projects {
         this.projectNum = allProjects.length;
     }
 
-    addItem (itemName) {
-        console.log('adding');
-        let myItem = new Items(itemName, '3/5', 2);
+    addItem (itemName, priority) {
+        let myItem = new Items(itemName, priority);
         this.todos.push(myItem);
+        console.log('creating item, priority ' + myItem.priority);
         window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
-        addTile (itemName, this.projectNum, (this.todos.length-1));
+        addTile (itemName, this.projectNum, (this.todos.length-1), myItem.priority);
         return this.todos;
     }
 }
@@ -151,34 +146,25 @@ plusProject.addEventListener('click', ()=> {
 })
 
 
-console.log(window.localStorage.getItem('savedProjects'));
-
 savedProjects = JSON.parse(window.localStorage.getItem('savedProjects'));
 window.localStorage.clear();
 
 
 if (savedProjects) {
 savedProjects.forEach(project=>{
-    
+   if(project){ 
    createProject(project.name, allProjects.length);
    project.todos.forEach(todo=>{
-      allProjects[allProjects.length-1].addItem(todo.name)
+      if (todo){
+      allProjects[allProjects.length-1].addItem(todo.name, todo.priority)
+      console.log(todo.name + " " + todo.priority);
+   }
     })
-    
-  })
- }
 
-//for (let i = 0; i < allProjects.length; i++){
-  //  if (allProjects[i]) {
-   //     addCard(allProjects[i]['name'], i);
-     //   for (let j = 0; j < allProjects[i]['todos'].length; j++) {
-       //     if (allProjects[i]['todos'][j]) {
-       //     addTile(allProjects[i]['todos'][j]['name'], j);
-      //  }
-  //  }
-// }
-
-// }
+  
+   }
+ })
+}
 
 
 
