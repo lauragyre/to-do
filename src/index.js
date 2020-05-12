@@ -21,7 +21,6 @@ const addTile = function (item, context, index, priority) {
     newTile.classList.add('tile');
     let tileNum = allProjects[context]['todos'].length - 1;
     newTile.id = `tile${tileNum}`;
-    console.log('adding tile, priority ' + priority);
     if (priority == 1) {newTile.style.opacity = '60%';}
     else if (priority == 2) {newTile.style.opacity = '80%';}
     else {newTile.style.opacity = '100%';}
@@ -101,7 +100,6 @@ const priorityDown = function (){
         let priority = parentProject['todos'][itemIndex]['priority'];   
         priority > 1? priority-- : priority = 1;
         parentProject['todos'][itemIndex]['priority'] = priority;
-        //console.log(parentProject + "item " + item + " priority set to " + priority);
         window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
         priority == 2? event.target.parentElement.style.opacity = '80%' : event.target.parentElement.style.opacity = '60%';
     })
@@ -127,7 +125,6 @@ class Projects {
     addItem (itemName, priority) {
         let myItem = new Items(itemName, priority);
         this.todos.push(myItem);
-        console.log('creating item, priority ' + myItem.priority);
         window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
         addTile (itemName, this.projectNum, (this.todos.length-1), myItem.priority);
         return this.todos;
@@ -157,11 +154,8 @@ savedProjects.forEach(project=>{
    project.todos.forEach(todo=>{
       if (todo){
       allProjects[allProjects.length-1].addItem(todo.name, todo.priority)
-      console.log(todo.name + " " + todo.priority);
    }
     })
-
-  
    }
  })
 }
