@@ -24,6 +24,8 @@ const addTile = function (item, context, index) {
     let tileText = document.createTextNode(item);
     newTile.append(tileText);
     newTile.append(xButton());
+    newTile.append(priorityDown());
+    newTile.append(priorityUp());
     let thisCard = document.querySelector('#card' + context);
     thisCard.append(newTile);
 }
@@ -68,7 +70,48 @@ const plusButton = function (){
         
     })
     return cardButton;
+ }
+
+const priorityUp = function (){
+    upButton = document.createElement('button');
+    upButton.classList.add('up');
+    up = document.createTextNode('+');
+    upButton.append(up);
+    upButton.addEventListener('click', function (){
+        let itemIndex = event.target.parentElement.id.substring(4);
+        console.log('itemindex ' + itemIndex);
+        let parentId = event.target.parentElement.parentElement.id;
+        console.log('parentId ' + parentId); 
+        let parentProject = allProjects[parentId.substring(4)];
+        console.log('parentPoject ' + parentProject);
+        let priority = parentProject['todos'][itemIndex]['priority'];   
+        priority < 3? priority++ : priority = 3;
+        parentProject['todos'][itemIndex]['priority'] = priority;
+        priority == 2? event.target.parentElement.style.opacity = '80%' : event.target.parentElement.style.opacity = '100%';
+    })
+    return upButton;
 }
+
+const priorityDown = function (){
+    downButton = document.createElement('button');
+    downButton.classList.add('down');
+    down = document.createTextNode('-');
+    downButton.append(down);
+    downButton.addEventListener('click', function (){
+        let itemIndex = event.target.parentElement.id.substring(4);
+        console.log('itemindex ' + itemIndex);
+        let parentId = event.target.parentElement.parentElement.id;
+        console.log('parentId ' + parentId); 
+        let parentProject = allProjects[parentId.substring(4)];
+        console.log('parentPoject ' + parentProject);
+        let priority = parentProject['todos'][itemIndex]['priority'];   
+        priority > 1? priority-- : priority = 1;
+        parentProject['todos'][itemIndex]['priority'] = priority;
+        priority == 2? event.target.parentElement.style.opacity = '80%' : event.target.parentElement.style.opacity = '60%';
+    })
+    return downButton;
+}
+
 
 class Items {
     constructor (name, date, priority) {
@@ -113,21 +156,29 @@ console.log(window.localStorage.getItem('savedProjects'));
 savedProjects = JSON.parse(window.localStorage.getItem('savedProjects'));
 window.localStorage.clear();
 
+
 if (savedProjects) {
-    allProjects = savedProjects;
-}
+savedProjects.forEach(project=>{
+    
+   createProject(project.name, allProjects.length);
+   project.todos.forEach(todo=>{
+      allProjects[allProjects.length-1].addItem(todo.name)
+    })
+    
+  })
+ }
 
-for (let i = 0; i < allProjects.length; i++){
-    if (allProjects[i]) {
-        addCard(allProjects[i]['name'], i);
-        for (let j = 0; j < allProjects[i]['todos'].length; j++) {
-            if (allProjects[i]['todos'][j]) {
-            addTile(allProjects[i]['todos'][j]['name'], j);
-        }
-    }
-}
+//for (let i = 0; i < allProjects.length; i++){
+  //  if (allProjects[i]) {
+   //     addCard(allProjects[i]['name'], i);
+     //   for (let j = 0; j < allProjects[i]['todos'].length; j++) {
+       //     if (allProjects[i]['todos'][j]) {
+       //     addTile(allProjects[i]['todos'][j]['name'], j);
+      //  }
+  //  }
+// }
 
-}
+// }
 
 
 

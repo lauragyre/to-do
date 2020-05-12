@@ -14,6 +14,10 @@ body {
     color: inherit;
 }
 
+#addproject:hover {
+    opacity: 75%;
+}
+
 .card {
     background-color: white;
     font-size: 1.5rem;
@@ -28,9 +32,14 @@ body {
     margin: 1rem 0;
     padding: 1rem;
     border-radius: 5px;
+    opacity: 80%;
 }
 
-.plus, .x {
+.card button:hover {
+    background-color: rgb(0,0,0,.07);
+}
+
+.plus, .x, .up, .down {
     float: right;
     color: grey;
     width: 2rem;
@@ -42,7 +51,12 @@ body {
     background-color: inherit;
 }
 
-.tile .x {
+
+.down {
+    margin-right: 1.5em;
+}
+
+.tile .x, .up, .down {
     color: white;
     border: 2px solid white;
 }
@@ -53,6 +67,10 @@ body {
 
 button:focus {
     outline: 0;
-    border: 0;
+}
+
+.tile button:hover {
+    background-color: rgba(255,255,255, .25 );
+   
 }
 
