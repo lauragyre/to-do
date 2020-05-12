@@ -6,12 +6,19 @@ body {
     color: gray;
 }
 
+button {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
 #addproject {
     font-size: 1.5rem;
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
     color: inherit;
+    background-color: white;
 }
 
 #addproject:hover {
