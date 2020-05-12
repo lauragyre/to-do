@@ -13,7 +13,7 @@ button {
 }
 
 #addproject {
-    font-size: 1.5rem;
+    font-size: 1.5em;
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
@@ -60,7 +60,7 @@ button {
 
 
 .down {
-    margin-right: 1.5em;
+    margin-right: 1.5rem;
 }
 
 .tile .x, .up, .down {
@@ -68,9 +68,6 @@ button {
     border: 2px solid white;
 }
 
-.plus {
-    font-size: 1.25rem;
-}
 
 button:focus {
     outline: 0;
