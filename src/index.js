@@ -2,8 +2,6 @@ let allProjects = [];
 
 const main = document.querySelector('#main');
 const plusProject = document.querySelector('#addproject');
-const plusButtons = document.querySelectorAll('.plus');
-const xButtons = document.querySelectorAll('.x');
 
 const addCard = function (name, index) {
     let newCard = document.createElement('div');
@@ -34,9 +32,9 @@ const addTile = function (item, context, index, priority) {
 }
 
 const xButton = function (){
-    cardButton = document.createElement('button');
+    let cardButton = document.createElement('button');
     cardButton.classList.add('x');
-    x = document.createTextNode('x');
+    let x = document.createTextNode('x');
     cardButton.append(x);
     cardButton.addEventListener('click', ()=>{
         let divToGo = event.target.parentElement;
@@ -57,23 +55,25 @@ const xButton = function (){
 
 
 const plusButton = function (){
-    cardButton = document.createElement('button');
+    let cardButton = document.createElement('button');
     cardButton.classList.add('plus');
-    plus = document.createTextNode('+');
+    let plus = document.createTextNode('+');
     cardButton.append(plus);
     cardButton.addEventListener('click', function (){
         let parentId = event.target.parentElement.id;
         let parentProject = allProjects[parentId.substring(4)];
-        parentProject.addItem(prompt('item name:'));
-        
+        let itemName = prompt('item name:');
+        if (itemName) {
+        parentProject.addItem(itemName);
+        }
     })
     return cardButton;
  }
 
 const priorityUp = function (){
-    upButton = document.createElement('button');
+    let upButton = document.createElement('button');
     upButton.classList.add('up');
-    up = document.createTextNode('+');
+    let up = document.createTextNode('+');
     upButton.append(up);
     upButton.addEventListener('click', function (){
         let itemIndex = event.target.parentElement.id.substring(4);
@@ -89,9 +89,9 @@ const priorityUp = function (){
 }
 
 const priorityDown = function (){
-    downButton = document.createElement('button');
+    let downButton = document.createElement('button');
     downButton.classList.add('down');
-    down = document.createTextNode('-');
+    let down = document.createTextNode('-');
     downButton.append(down);
     downButton.addEventListener('click', function (){
         let itemIndex = event.target.parentElement.id.substring(4);
@@ -132,18 +132,21 @@ class Projects {
 }
 
 const createProject = function (name){
-    newProject = new Projects(name);
+    let newProject = new Projects(name);
     allProjects.push(newProject);
     window.localStorage.setItem('savedProjects', JSON.stringify(allProjects));
     addCard(newProject.name, (allProjects.length-1));
 }
 
 plusProject.addEventListener('click', ()=> {
-    createProject(prompt('project name:'), allProjects.length);
+    let projectName = prompt('project name:');
+    if (projectName) {
+    createProject(projectName, allProjects.length);
+    }
 })
 
 
-savedProjects = JSON.parse(window.localStorage.getItem('savedProjects'));
+let savedProjects = JSON.parse(window.localStorage.getItem('savedProjects'));
 window.localStorage.clear();
 
 
