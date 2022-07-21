@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "terser": "^3.14.1",
+    "terser": "^4.8.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
